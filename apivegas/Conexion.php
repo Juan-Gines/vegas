@@ -34,9 +34,9 @@
       if (!empty($_GET["email"])&&!empty($_GET["pass"])) {
 				$limpio=Validarinputs::limpio_sql($this->dblink, ["email_limp"=>$_GET["email"], "pass_limp"=>$_GET["pass"]]);        
 				$query="SELECT * FROM usuarios WHERE usu_email='{$limpio["email_limp"]}'";
-				$resultado=mysqli_query($this->dblink, $query);
-				if (mysqli_num_rows($resultado)==1) {
-          $pass=mysqli_fetch_assoc($resultado);                     
+        $resultado=$this->dblink->query($query);				
+				if ($resultado->num_rows==1) {
+          $pass=$resultado->fetch_assoc();                     
           if (password_verify($limpio["pass_limp"], $pass["usu_password"])) {
             $this->log=$pass["usu_id"];
             $pass['usu_password']=$limpio["pass_limp"];
@@ -44,7 +44,7 @@
           }
 				}      
       }
-      mysqli_free_result($resultado);              
+      $resultado->free_result();              
       return $this->log;            
     }
     public function logOK(){     
@@ -54,14 +54,17 @@
       }            
       return $resultado;
     }
+
+    //función que busca un registro
+
     public function existe(){     
       unset($_GET["existe"]);      
       $limpio=Validarinputs::limpio_sql($this->dblink,$_GET);
       $query=Querys::select($limpio);      
-      $result=mysqli_query($this->dblink, $query);
-      if (mysqli_num_rows($result)==1) {
-        $resultado=mysqli_fetch_assoc($result);
-        mysqli_free_result($result);
+      $result=$this->dblink->query($query);
+      if ($result->num_rows==1) {
+        $resultado=$result->fetch_assoc();
+        $result->free_result();
       } else {
         $resultado=["error"=>"Recurso no encontrado"];
       }       
@@ -74,10 +77,10 @@
       unset($_GET["id"]);
       $limpio=Validarinputs::limpio_sql($this->dblink,$_GET);
       $query=Querys::select($limpio);            
-      $result=mysqli_query($this->dblink, $query);
-      if (mysqli_num_rows($result)==1) {
-        $resultado=mysqli_fetch_assoc($result);
-        mysqli_free_result($result);
+      $result=$this->dblink->query($query);
+      if ($result->num_rows==1) {
+        $resultado=$result->fetch_assoc();
+        $result->free_result();
       } else {
         $resultado=["error"=>"Recurso no encontrado"];
       }       
@@ -85,11 +88,11 @@
     }
     public function delete(){      
       if (isset($_GET["id"])) {
-				list($id_limp)=Validarinputs::limpio_sql($this->dblink,$_GET["id"]);
-				if (is_numeric($_GET["id"])) {
+				$id_limp=Validarinputs::limpio_sql($this->dblink,$_GET["id"]);
+				if (is_numeric($id_limp)) {
           $query="DELETE FROM favoritos  WHERE id_per={$this->log} AND id_fav={$id_limp}";
-          mysqli_query($this->dblink, $query);
-          if (mysqli_affected_rows($this->dblink)==1) {
+          $this->dblink->query($query);
+          if ($this->dblink->affected_rows==1) {
               $resultado=["borra"=>"Registro borrado"];
           } else {
               $resultado=["error"=>"El registro no se ha borrado"];
@@ -103,8 +106,8 @@
       $post=json_decode($strjs,true);          
       $post=Validarinputs::limpio_sql($this->dblink,$post);                    
       $query=Querys::post($post);                        
-      mysqli_query($this->dblink, $query);
-      if (mysqli_affected_rows($this->dblink)==1) {
+      $this->dblink->query($query);
+      if ($this->dblink->affected_rows==1) {
 				$resultado=["bueno"=>"Usuario insertado correctamente"];
       } else {
 				$resultado=["malo"=>"No se inserto el usuario"];
@@ -116,8 +119,8 @@
       $put=json_decode($strjs,true);
       $putlimpio=Validarinputs::limpio_sql($this->dblink,$put);
       $query=Querys::put($putlimpio);
-      mysqli_query($this->dblink, $query);
-      if (mysqli_affected_rows($this->dblink)==1) {
+      $this->dblink->query($query);
+      if ($this->dblink->affected_rows==1) {
 				$resultado=["bueno"=>"Favorito modificado correctamente"];
       } else {
 				$resultado=["malo"=>"No se modificó el favorito"];

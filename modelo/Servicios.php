@@ -10,14 +10,15 @@
       $this->url=URLSERVER;
     }
 
+    //función que devuelve true si el email y el pass es correcto
+
     function login($email,$pass){                             
       $resultado=file_get_contents($this->url."?email={$email}&pass={$pass}&login",false,Contexto::contexto('get'));      
-      $result=json_decode($resultado,true);
-      /* echo "<pre>";
-      var_dump($result);
-      echo "</pre>"; */            
+      $result=json_decode($resultado,true);                  
       return $result;
     }
+
+    //funcion que 
 
     function existe($datos){      
       $datosurl=http_build_query($datos);      

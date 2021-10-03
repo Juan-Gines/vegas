@@ -13,8 +13,7 @@
         case "GET":
           if (isset($_GET["login"])) {
               $final=$conexion->logOK();
-          } elseif (isset($_GET["id"])) {
-            echo"estoy en el get";
+          } elseif (isset($_GET["id"])) {            
               $final=$conexion->getID();
           } 
           break;
