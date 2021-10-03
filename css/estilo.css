@@ -1,0 +1,104 @@
+html{
+    background-image:url("../imagenes/casinodos.png");
+    min-height: 100vh;
+    background-repeat: no-repeat;
+    background-size:cover;
+    background-position: bottom;
+    align-items: center ;
+}
+
+
+.rul{
+    margin: 20px;
+    padding: 10px;
+    border: 3px solid gold;
+    border-radius: 15px;
+    font-size: 20px;
+    font-weight: 600;    
+}
+.displayres{
+    display: none;
+}
+.win{
+    color:rgb(50, 204, 71);
+}
+.lose{
+    color: chocolate;
+}
+
+header {
+    align-items: left;
+}
+header img{
+    width: 200px;
+
+}
+.aligncenter{
+    text-align: center;
+}
+body{
+    font-family: arial,verdana,sans-serif;
+    color:gold;
+}
+h1,h2,h3{
+    color:rgb(0, 255, 136);
+    text-shadow: 2px 2px 5px rgb(48, 4, 4);
+}
+
+form{    
+    min-width: 450px;
+    text-align: left;
+    padding: 5px;
+    color: gold;
+    border: 3px solid gold;
+    border-radius: 15px;
+}
+output{
+    
+    color:aquamarine;
+}
+label{
+    padding: 5px;
+    font-weight: 600;
+}
+input{
+    font-size: 12px;
+    padding: 2px 5px;
+    margin-left: 5px;
+}
+button{
+    margin: 10px;
+    background-color: gold;
+    border: 3px solid orange;
+    border-radius: 5px;
+    color: rgb(12, 11, 48);
+    font-weight: 600;
+}
+h3{
+    text-align: center;
+}
+main{
+    margin: 20px 0px;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+@media (max-width: 500px){
+    main{
+        padding:20px 0px;
+    }
+    form{    
+        min-width: 360px;    
+    }   
+}
+@media (max-width: 370px){
+    main{
+        display: block;
+        padding: 0px;
+    }
+    form{    
+        min-width:0px;    
+    }   
+}
+
