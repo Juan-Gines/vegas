@@ -19,6 +19,9 @@
         case isset($_GET["ruleta"]):
           $ruleta->ruleta();
           break;
+        case isset($_GET["blackjack"]):
+          $blackjack->blackjack();
+          break;
         case isset($_GET["close"]):
           $form->close();
         case isset($_GET["volver"]):

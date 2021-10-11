@@ -3,7 +3,7 @@
   require_once "vistas/Vistas.php";
   require_once "librerias/ValidarInputs.php";
   require_once "controladores/juegos/Juegos.php";
-  class Ruleta extends Juegos{
+  class Blackjack extends Juegos{
     
     private $vista;
     private $datos;
@@ -11,60 +11,17 @@
       parent::__construct();
       $this->vista=new Vistas();
       $this->datos=[];
-    }
-    
-    function ruleta(){      
-      $numeros=[
-        ["verde"],
-        ["rojo","impar","falta"],
-        ["negro","par","falta"],
-        ["rojo","impar","falta"],
-        ["negro","par","falta"],
-        ["rojo","impar","falta"],
-        ["negro","par","falta"],
-        ["rojo","impar","falta"],
-        ["negro","par","falta"],
-        ["rojo","impar","falta"],
-        ["negro","par","falta"],
-        ["negro","impar","falta"],
-        ["rojo","par","falta"],
-        ["negro","impar","falta"],
-        ["rojo","par","falta"],
-        ["negro","impar","falta"],
-        ["rojo","par","falta"],
-        ["negro","impar","falta"],
-        ["rojo","par","falta"],
-        ["rojo","impar","pasa"],
-        ["negro","par","pasa"],
-        ["rojo","impar","pasa"],
-        ["negro","par","pasa"],
-        ["rojo","impar","pasa"],
-        ["negro","par","pasa"],
-        ["rojo","impar","pasa"],
-        ["negro","par","pasa"],
-        ["rojo","impar","pasa"],
-        ["negro","par","pasa"],
-        ["negro","impar","pasa"],
-        ["rojo","par","pasa"],
-        ["negro","impar","pasa"],
-        ["rojo","par","pasa"],
-        ["negro","impar","pasa"],
-        ["rojo","par","pasa"],
-        ["negro","impar","pasa"],
-        ["rojo","par","pasa"]        
-      ];  
-          //TODO añadir que se puedan realizar más apuestas.
+    }    
+    function blackjack(){      
       if($_SERVER["REQUEST_METHOD"]=="POST"&&$_POST["idrand"]==$_SESSION["idrand"]){
-        if(isset($_POST["jugada"])){
+        if(isset($_POST["black"])){
           $validador=["rojo","negro","par","impar","falta","pasa"];
           $validador=array_merge($validador,array_keys($numeros));          
           ValidarInputs::limpio_select($_POST["apuesta"],$validador);
           (ValidarInputs::valido())?$this->datos["apuesta"]=$_POST["apuesta"]: $this->datos["pantalla"]="Datos erroneos";
           ValidarInputs::limpio_select($_POST["dinero"],["5","10","20","50","100"]);
           (ValidarInputs::valido())?$this->datos["dinero"]=$_POST["dinero"]: $this->datos["pantalla"]="Datos erroneos";                  
-          if(isset($this->datos["apuesta"])&&isset($this->datos["dinero"])){
-            if($_SESSION["usu_puntos"]>$this->datos["dinero"])
-            $_SESSION["totalDinero"]+=
+          if(isset($this->datos["apuesta"]) &&isset($this->datos["dinero"])){
             $_SESSION["user"]["usu_puntos"]-=$this->datos["dinero"];                        
             $sorteo=mt_rand(0,36);
             $resultado=$numeros[$sorteo];

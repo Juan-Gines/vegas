@@ -1,9 +1,19 @@
 <?php
   require_once "controladores/salon/Salon.php";    
   Class Vistas{        
-    
+    private $titulo;
+    private $dinero;
+    private $volver;
+    private $salir;
 
-    static function cabecera(){
+    function __construct() {
+      $this->titulo=isset($_SESSION["user"]["usu_nick"])?"Bienvenido ".$_SESSION["user"]["usu_nick"]:"Casino Vegas";
+      $this->dinero=isset($_SESSION["user"]["usu_puntos"])?"Dinero: ".$_SESSION["user"]["usu_puntos"]:"€";
+      $this->volver="<a href=".htmlspecialchars($_SERVER['PHP_SELF']."?volver")."><button type='button'>Volver</button></a>";
+      $this->salir="<a href=".htmlspecialchars($_SERVER['PHP_SELF']."?close")."><button type='button'>Logout</button></a>";      
+    }
+
+    static function cabecera($datos=[]){
       ?>
       <!DOCTYPE html>
       <html lang="es">
@@ -17,19 +27,30 @@
           <title>YoYa casino</title>
       </head>
       <body>
-        <header>
-          <img src="imagenes/logo.png" alt="logo">
+        <header class="cabecera">
+          <figure class="logo">
+            <img src="imagenes/logo.png" alt="logo">
+          </figure>
+          <div class="titulo">
+            <h2><?=isset($datos["titulo"])? $datos["titulo"]:""?></h2>
+          </div>
+          <div class="dinero">
+            <h2><?=isset($datos["dinero"])? $datos["dinero"]:""?></h2>
+          </div>
+          <div class="volver">
+            <?=isset($datos["volver"])? $datos["volver"]:""?>
+          </div>
         </header>
       <?php  
     }
 
     function login($datos){      
-      self::cabecera();
+      self::cabecera(["titulo"=>$this->titulo]);
       $id=mt_rand();
       $_SESSION["idrand"]=$id;  
       ?>          
       <main>
-        <form action="<?=htmlspecialchars($_SERVER["PHP_SELF"])?>" method="POST">          
+        <form class="login" action="<?=htmlspecialchars($_SERVER["PHP_SELF"])?>" method="POST">          
           <label for="email">Email:</label>
           <input type="text" name="email" id="email" value="<?= (!empty($datos["email"])) ? $datos["email"] : "" ?>">          
           <label for="pass">Password:</label>
@@ -91,14 +112,13 @@
       self::footer();
     }
 
-    function salon(){      
-      self::cabecera();             
+    function salon(){            
+      self::cabecera(["titulo"=>$this->titulo,"dinero"=>$this->dinero,"volver"=>$this->salir]);             
       ?>      
       <main>
-        <h2>Bienvenido <?=$_SESSION["user"]["usu_nick"]?> Dinero: <?=$_SESSION["user"]["usu_puntos"]?>€</h2>
+        <h2>Seleccione el juego</h2>        
         <div>
-          <a href="<?=htmlspecialchars($_SERVER['PHP_SELF']."?ruleta")?>"><button type="button">Ruleta</button></a>
-          <a href="<?=htmlspecialchars($_SERVER['PHP_SELF']."?close")?>"><button type="button">Cerrar sesion</button></a>
+          <a href="<?=htmlspecialchars($_SERVER['PHP_SELF']."?ruleta")?>"><button type="button">Ruleta</button></a>          
         </div>    
       </main>
       <?php
@@ -107,58 +127,48 @@
 
     function ruleta($datos){      
       $id=mt_rand();
-      $_SESSION["idrand"]=$id;         
-      ?><!DOCTYPE html>
-      <html class="ruleta" lang="es">
-      <head>
-          <meta charset="UTF-8">
-          <meta http-equiv="X-UA-Compatible" content="IE=edge">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <link rel="stylesheet" href="css/bootstrap-reboot.css">
-          <link rel="stylesheet" href="css/bootstrap-reboot.css.map">
-          <link rel="stylesheet" href="css/estilo.css">
-          <title>YoYa casino</title>
-      </head>
-      <body>
-        <header>
-          <img src="imagenes/logo.png" alt="logo">
-        </header>      
-      <main>
-        <h2>Ruleta</h2>               
-        <a href="<?=htmlspecialchars($_SERVER['PHP_SELF']."?volver")?>"><button type="button">Volver</button></a>
-          <h3><?=$_SESSION["user"]["usu_nick"]?>  Puntos: <?=$_SESSION["user"]["usu_puntos"]?></h3> 
-        <form action="<?=htmlspecialchars($_SERVER["PHP_SELF"]."?ruleta")?>" method="POST">
-          
-          <label for="apuesta">Apuesta:</label>
-          <select name="apuesta">
-            <option value="rojo" <?= (isset($datos["apuesta"])&&$datos["apuesta"]=="rojo")?"selected":""?>>Rojo</option>
-            <option value="negro" <?= (isset($datos["apuesta"])&&$datos["apuesta"]=="negro")?"selected":""?>>Negro</option>
-            <option value="impar" <?= (isset($datos["apuesta"])&&$datos["apuesta"]=="impar")?"selected":""?>>Impar</option>
-            <option value="par" <?= (isset($datos["apuesta"])&&$datos["apuesta"]=="par")?"selected":""?>>Par</option>
-            <option value="falta" <?= (isset($datos["apuesta"])&&$datos["apuesta"]=="falta")?"selected":""?>>Falta</option>
-            <option value="pasa" <?= (isset($datos["apuesta"])&&$datos["apuesta"]=="pasa")?"selected":""?>>Pasa</option>          
-            <?php
-            for ($i=0;$i<37;$i++) {
-                ?>
-            <option value=<?=$i?> <?= (isset($datos["apuesta"])&&$datos["apuesta"]==$i)?"selected":""?>><?=$i?></option>
-            <?php
-            }
-            ?>
-          </select><br>
-          <label for="dinero">Cuanto apuestas:</label>          
-          <select name="dinero">
-            <option value="5" <?= (isset($datos["dinero"])&&$datos["dinero"]==5)?"selected":""?>>5€</option>
-            <option value="10" <?= (isset($datos["dinero"])&&$datos["dinero"]==10)?"selected":""?>>10€</option>
-            <option value="20" <?= (isset($datos["dinero"])&&$datos["dinero"]==20)?"selected":""?>>20€</option>
-            <option value="50" <?= (isset($datos["dinero"])&&$datos["dinero"]==50)?"selected":""?>>50€</option>
-            <option value="100" <?= (isset($datos["dinero"])&&$datos["dinero"]==100)?"selected":""?>>100€</option>
-          </select>
-          <input type="hidden" name="idrand" id="idrand" value="<?= $id?>">                                    
-          <button name="jugada">Juega</button></output>                    
-        </form>
-            <output class="rul aligncenter <?= (!empty($datos["pantalla"]))? "" : "displayres "?><?= (!empty($datos["pantalla"]))? $datos["pantalla"] : ""?>">
-            <?= (!empty($datos["pantalla"]))? $datos["resultado"]."<br>".$datos["pantalla"] : ""?></output><br>    
-      </main>
+      $_SESSION["idrand"]=$id;
+      self::cabecera(["titulo"=>$this->titulo,"dinero"=>$this->dinero,"volver"=>$this->volver]);        
+      ?> 
+      <h2 class="aligncenter">Ruleta</h2>    
+      <main class="row">        
+        <figure class="ruleta">
+          <img src="imagenes/ruletanueva.png" alt="ruleta">
+        </figure>
+        <div class="apuesta">        
+          <form class="alignitemscenter"action="<?=htmlspecialchars($_SERVER["PHP_SELF"]."?ruleta")?>" method="POST">          
+            <label for="apuesta">Apuesta:</label>
+            <select name="apuesta">
+              <option value="rojo" <?= (isset($datos["apuesta"])&&$datos["apuesta"]=="rojo")?"selected":""?>>Rojo</option>
+              <option value="negro" <?= (isset($datos["apuesta"])&&$datos["apuesta"]=="negro")?"selected":""?>>Negro</option>
+              <option value="impar" <?= (isset($datos["apuesta"])&&$datos["apuesta"]=="impar")?"selected":""?>>Impar</option>
+              <option value="par" <?= (isset($datos["apuesta"])&&$datos["apuesta"]=="par")?"selected":""?>>Par</option>
+              <option value="falta" <?= (isset($datos["apuesta"])&&$datos["apuesta"]=="falta")?"selected":""?>>Falta</option>
+              <option value="pasa" <?= (isset($datos["apuesta"])&&$datos["apuesta"]=="pasa")?"selected":""?>>Pasa</option>          
+              <?php
+              for ($i=0;$i<37;$i++) {
+                  ?>
+              <option value=<?=$i?> <?= (isset($datos["apuesta"])&&$datos["apuesta"]==$i)?"selected":""?>><?=$i?></option>
+              <?php
+              }
+              ?>
+            </select><br>
+            <label for="dinero">Cuanto apuestas:</label>          
+            <select name="dinero">
+              <option value="5" <?= (isset($datos["dinero"])&&$datos["dinero"]==5)?"selected":""?>>5€</option>
+              <option value="10" <?= (isset($datos["dinero"])&&$datos["dinero"]==10)?"selected":""?>>10€</option>
+              <option value="20" <?= (isset($datos["dinero"])&&$datos["dinero"]==20)?"selected":""?>>20€</option>
+              <option value="50" <?= (isset($datos["dinero"])&&$datos["dinero"]==50)?"selected":""?>>50€</option>
+              <option value="100" <?= (isset($datos["dinero"])&&$datos["dinero"]==100)?"selected":""?>>100€</option>
+            </select>
+            <input type="hidden" name="idrand" id="idrand" value="<?= $id?>">                                    
+            <button name="jugada">Juega</button></output>                    
+          </form>
+          <output class="apuesta"></output>
+          <output class="rul aligncenter <?= (!empty($datos["pantalla"]))? "" : "displayres "?><?= (!empty($datos["pantalla"]))? $datos["pantalla"] : ""?>">
+          <?= (!empty($datos["pantalla"]))? $datos["resultado"]."<br>".$datos["pantalla"] : ""?></output><br> 
+        </div>   
+      </main>      
       <?php
       self::footer();
     }
