@@ -1,6 +1,6 @@
-# Proyecto final CP desarrollo web
+# Proyecto final CP Desarrollo de Aplicaciones Web
 
-Este es un casino proyecto final para el Certificado de Profesionalidad de Desarrollador Web.
+Este es un casino proyecto final para el Certificado de Profesionalidad de Desarrollo de Aplicaciones Web.
 
 ## Tecnologías
 
